@@ -7,6 +7,19 @@
 </head>
 <body>
 <script>
+//store in an array and check every time that the keyup matches what you are looking for
+window.addEventListener('keyup', (e) => {
+  console.log(e.key);
+  pressed.push(e.key);
+  //not exceed 6 letters from user in console
+  pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length); 
+  if (pressed.join('').includes(secretCode)) { //pressed.join makes it a string
+    console.log('DING DING!');
+    cornify_add(); // adds unicorns and rainbows to the screen
+  }
+  console.log(pressed);
+});
+
 </script>
 </body>
 </html>

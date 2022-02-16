@@ -35,6 +35,42 @@
   const options = document.querySelectorAll('[type="range"], [name="text"]');
   const speakButton = document.querySelector('#speak');
   const stopButton = document.querySelector('#stop');
+  msg.text = document.querySelector('[name="text"]').value;
+
+  function populateVoices() {
+    voices = this.getVoices();
+    voicesDropdown.innerHTML = voices
+      //.filter(voice => voice.lang.includes('en')) //can filter only english languages
+      .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+      .join('');
+  }
+
+  function setVoice() {
+   console.log(this.value);
+    msg.voice = voices.find(voice => voice.name === this.value); //find SynthesisVoice name value 
+    toggle();
+  }
+
+//everytime user changes rate or pitch we restart it
+  function toggle(startOver = true) { //restarts itself
+    speechSynthesis.cancel(); //stop it from speaking
+    if (startOver) { 
+      speechSynthesis.speak(msg);
+    }
+  }
+
+  function setOption() {
+    console.log(this.name, this.value); 
+    msg[this.name] = this.value; //what value has changes and what has it changes to
+    toggle();
+  }
+
+  speechSynthesis.addEventListener('voiceschanged', populateVoices);
+  voicesDropdown.addEventListener('change', setVoice);
+  options.forEach(option => option.addEventListener('change', setOption)); //rate, pitch and text area
+  speakButton.addEventListener('click', toggle);
+  stopButton.addEventListener('click', () => toggle(false)); //passing argument to a function in simpler way (REACT)
+  //OR stopButton.addEventListener('click, toogle.bind(null, false)); //
 </script>
 
 </body>

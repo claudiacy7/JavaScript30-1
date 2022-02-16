@@ -35,6 +35,41 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items'); //white div that surrounds everything
+  let isDown = false; //flag variable if you are clicking or not
+  let startX; //will assign values in our events later
+  let scrollLeft;
+
+  slider.addEventListener('mousedown', (e) => {
+    isDown = true;
+    slider.classList.add('active');
+    //console.log(e).pageX; //will tell us exactly X coordinates of where we clicked on page not div
+    startX = e.pageX - slider.offsetLeft; //this will remove any offset area between the div background and the page
+    scrollLeft = slider.scrollLeft; //it will move but we always need to go to the initial setup
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mouseup', () => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+
+  slider.addEventListener('mousemove', (e) => {
+  //console.log(isDown);
+  //console.log('Do work');
+  //console.log(startX);
+    if (!isDown) return;  // stop the function from running
+    e.preventDefault(); //stop any text selecting or weird things browser thinks you are selecting
+    const x = e.pageX - slider.offsetLeft; //where cursor is when you've moved it
+    //console.log(x, startX); this will help you see the values console.log({x, startX});
+    const walk = (x - startX) * 3; //* 3 slides faster when scrolling
+    slider.scrollLeft = scrollLeft - walk; //using scrollLeft to reference it from the initial capture
+  });
+
 </script>
 
   </body>

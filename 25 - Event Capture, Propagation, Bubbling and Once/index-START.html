@@ -42,7 +42,26 @@
 
 <button></button>
 <script>
+const divs = document.querySelectorAll('div');
+  const button = document.querySelector('button');
 
+  function logText(e) {
+    console.log(this.classList.value);
+    // e.stopPropagation(); // stops the bubbling effect
+    // console.log(this);
+  }
+
+  //docuemnt.body.addEventListener('click', logText); //add class name to body element
+  divs.forEach(div => div.addEventListener('click', logText, { //tick all the divs when one is clicked
+    capture: false, //goes top down and once event is fired it bubbles from down to top
+    once: true //listen for a click and unbind itself, same as div.removeEventListener('click', logText, capture?:bollean)
+  }));
+
+  button.addEventListener('click', () => {
+    console.log('Click!!!');
+  }, {
+    once: true //can nly click on that button once only because it becomes unbinded
+  });
 </script>
 </body>
 </html>

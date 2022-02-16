@@ -36,7 +36,53 @@
   const holes = document.querySelectorAll('.hole');
   const scoreBoard = document.querySelector('.score');
   const moles = document.querySelectorAll('.mole');
+  let lastHole;
+  let timeUp = false;
+  let score = 0;
 
+  function randomTime(min, max) {
+    return Math.round(Math.random() * (max - min) + min); //random seconds of when the mole pops up
+  }
+
+  function randomHole(holes) { //random hole of where the mole pops up from, Get me a random DOM element from NodeList
+    const idx = Math.floor(Math.random() * holes.length); //between 0 to 6
+    const hole = holes[idx];//holes[0] , holes[5] etc
+    if (hole === lastHole) { //avoid mole coming out of same hole twice 
+      console.log('Ah nah thats the same one bud');
+      return randomHole(holes);
+    }
+    
+    lastHole = hole; //saves reference from previous time randomHole() ran
+    return hole; //or console.log(hole);
+  }
+
+  function peep() {
+    const time = randomTime(200, 1000); //between 200 miliseconds and 1 seconds
+    const hole = randomHole(holes);
+    //console.log(time, hole);
+    hole.classList.add('up'); //trigger css animation .hole.up
+    setTimeout(() => { //mole goes away after few seconds same as randomTime
+      hole.classList.remove('up');
+      if (!timeUp) peep(); //stop running
+    }, time);
+  }
+
+  function startGame() {
+    scoreBoard.textContent = 0;
+    timeUp = false;
+    score = 0;
+    peep();
+    setTimeout(() => timeUp = true, 10000) //after 10 seconds we want to set timeUp to true so it will stop
+  }
+
+  function bonk(e) {
+    if(!e.isTrusted) return; // if you fake clicks through JS, isTrusted will show as false
+    score++;
+    this.parentNode.classList.remove('up');
+    scoreBoard.textContent = score;
+  }
+
+  moles.forEach(mole => mole.addEventListener('click', bonk)); //listen for click on each mole to add points
 </script>
 </body>
 </html>
